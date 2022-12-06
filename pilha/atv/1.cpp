@@ -5,7 +5,7 @@
 typedef struct reg_site {
   char nome[30];
   char link[100];
-  struct reg_site* prox;
+  struct reg_site *prox;
 } Site;
 
 typedef struct Pilha {
@@ -13,18 +13,18 @@ typedef struct Pilha {
   int tamanho;
 } Pilha;
 
-Site* inicializaSite(char* nome, char* link) {
-  Site* site = (Site*)malloc(sizeof(Site));
-  strcpy(site->nome, nome);
-  strcpy(site->link, link);
-  return site;
-}
-
 Pilha* inicializaPilha() {
   Pilha* pilha = (Pilha*)malloc(sizeof(Pilha));
   pilha->topo = NULL;
   pilha->tamanho = 0;
   return pilha;
+}
+
+Site* inicializaSite(char* nome, char* link) {
+  Site* site = (Site*)malloc(sizeof(Site));
+  strcpy(site->nome, nome);
+  strcpy(site->link, link);
+  return site;
 }
 
 void push(Pilha* pilha, Site* site) {
@@ -66,7 +66,7 @@ Site* voltar(Pilha* pilha, int n) {
 }
 
 int main(int argc, char const* argv[]) {
-  Pilha* pilha = inicializaPilha();
+  Pilha *pilha = inicializaPilha();
   Site *s1, *s2, *s3, *s4;
   s1 = inicializaSite("Google", "www.google.com");
   s2 = inicializaSite("Uol", "www.uol.com.br");
