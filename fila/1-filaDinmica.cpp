@@ -27,7 +27,7 @@ void enfileira(int dado, FILA *f){
         ptr->prox = NULL; //inicialmente ele vai receber o dado e sempre vai apontar para NULL
         if (f->ini == NULL){ // se TRUE é pq vai ser inserindo no primeiro nó
             f->ini = ptr;
-        } else { // se não, inserir no inicio
+        } else { // se não, inserir no fim (ultimo da fila)
             f->fim->prox = ptr; 
         }
         f->fim = ptr; // o final da fila sempre vai apontar para o novo nó
