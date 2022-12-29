@@ -70,6 +70,8 @@ int main(void){
         system("pause");
         system("cls");
     } while (opc != 0);  
+
+    return 0;
 }
 
 

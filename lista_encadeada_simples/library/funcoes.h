@@ -79,7 +79,7 @@ void remover(celula **ptr_cabeca, int valor) {
   }
 }
 
-//modificar para comprar com strings
+//modificar para comparar com strings
 void inserir_ordenado(celula **ptr_cabeca, celula *nova) {
   if (*ptr_cabeca == NULL) {
     nova->prox = *ptr_cabeca;
