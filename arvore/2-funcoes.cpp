@@ -36,20 +36,20 @@ int tamanho (No *raiz){
 }
 
 //Busca em ordem (ordenado)
-void imprimir(No *raiz){
+void imprimirOrd(No *raiz){
     if(raiz != NULL){ //se não estiver vazia
-        imprimir(raiz->esq);
+        imprimirOrd(raiz->esq);
         printf("%d ", raiz->conteudo);
-        imprimir(raiz->dir);
+        imprimirOrd(raiz->dir);
     }
 } 
 
 //Busca Pré-Ordem (profundidade)
-void imprimir(No *raiz){
+void imprimirPre(No *raiz){
     if(raiz != NULL){ //se não estiver vazia
         printf("%d ", raiz->conteudo);
-        imprimir(raiz->esq);
-        imprimir(raiz->dir);
+        imprimirPre(raiz->esq);
+        imprimirPre(raiz->dir);
     }
 } 
 
@@ -69,8 +69,42 @@ int buscar (No *raiz, int chave){
     }
 }
 
+//retorna um ponteiro para o nó
+No *remover (No *raiz, int chave){
+    if (raiz == NULL){
+        printf("\n\nValor não encontrado!\n");
+        return NULL;
+    } else {
+        if (raiz->conteudo == chave){
+            //remove nós folhoas(nós sem folhas)
+            if(raiz->esq == NULL && raiz->dir == NULL){
+                free(raiz);
+                return NULL; // a esq ou dir do nó pai vai apontar para NULL
+            } else {
+                //remove nós com apenas 1 filho
+                if (raiz->esq != NULL || raiz->dir != NULL){
+                    No *aux; //variavel para guarda o filho do nó a ser removido
+                    if (raiz->esq != NULL)
+                        aux = raiz->esq;
+                    else 
+                        aux = raiz->dir;
+                    free(raiz);
+                    return aux; //retornando o filho do nó removido o pai do nó removido (avô)
+                }
+            }
+        }
+        else {
+            if (chave < raiz->conteudo)
+                raiz->esq = remover(raiz->esq, chave);
+            else
+                raiz->dir = remover(raiz->dir, chave);
+            return raiz;
+        }
+    }
+}
+
 void menu(){
-    printf("MENU:\n");
+    printf("\nMENU:\n");
     printf("1 - Inserir nó\n");
     printf("2 - Imprimir árvore ordenada\n");
     printf("3 - Imprimir árvore em profundidade\n");
@@ -99,18 +133,18 @@ int main(void){
             break;
         case 2:
             printf("\nImpressão da árvore binária em ordem:\n");
-            imprimir(raiz);
+            imprimirOrd(raiz);
             printf("\n");
             printf("Tamanho: %d", tamanho(raiz));
             break;
         case 3:
             printf("\nImpressão da árvore binária em profundidade:\n");
-            imprimir(raiz);
+            imprimirPre(raiz);
             printf("\n");
             printf("Tamanho: %d", tamanho(raiz));
             break;
         case 4:
-            printf("\nQual valor deseja buscar? ");
+            printf("\nDigite um número a ser buscado: ");
             scanf("%d", &valor);
 
             if (buscar(raiz, valor) == -1)
@@ -119,6 +153,10 @@ int main(void){
                 printf("\n\nResultado da busca: %d", buscar(raiz, valor));
             break;
         case 5:
+            printf("Digite um número para remover: ");
+            scanf("%d", &valor);
+            raiz = remover(raiz, valor);
+            printf("\n\nRemovido com sucesso!\n");
             break;
         default:
             printf("\n\nOpção inválida!\n");
