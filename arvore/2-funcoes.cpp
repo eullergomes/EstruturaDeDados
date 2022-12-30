@@ -12,9 +12,9 @@ typedef struct no{
 No *inserirNovaVersao(No *raiz, int valor){
     if (raiz == NULL){ //se não tiver ninguem
         No *novo = (No*) malloc(sizeof(No));
+        novo->conteudo = valor;
         novo->esq = NULL;
         novo->dir = NULL;
-        novo->conteudo = valor;
         return novo;
     } else { //se já tiver elementos
         if (valor < raiz->conteudo){
@@ -37,7 +37,7 @@ int tamanho (No *raiz){
 
 //Busca em ordem (ordenado)
 void imprimirOrd(No *raiz){
-    if(raiz != NULL){ //se não estiver vazia
+    if (raiz != NULL){ //se não estiver vazia
         imprimirOrd(raiz->esq);
         printf("%d ", raiz->conteudo);
         imprimirOrd(raiz->dir);
@@ -46,7 +46,7 @@ void imprimirOrd(No *raiz){
 
 //Busca Pré-Ordem (profundidade)
 void imprimirPre(No *raiz){
-    if(raiz != NULL){ //se não estiver vazia
+    if (raiz != NULL){ //se não estiver vazia
         printf("%d ", raiz->conteudo);
         imprimirPre(raiz->esq);
         imprimirPre(raiz->dir);
@@ -76,13 +76,13 @@ No *remover (No *raiz, int chave){
         return NULL;
     } else {
         if (raiz->conteudo == chave){
-            //remove nós folhoas(nós sem folhas)
+            //remove nós folhas nós sem filhos)
             if(raiz->esq == NULL && raiz->dir == NULL){
                 free(raiz);
                 return NULL; // a esq ou dir do nó pai vai apontar para NULL
             } else {
                 //remove nós com apenas 1 filho
-                if (raiz->esq != NULL || raiz->dir != NULL){
+                if (raiz->esq == NULL || raiz->dir == NULL){ //para ser true apenas um deles deve ser != NULL
                     No *aux; //variavel para guarda o filho do nó a ser removido
                     if (raiz->esq != NULL)
                         aux = raiz->esq;
@@ -91,9 +91,20 @@ No *remover (No *raiz, int chave){
                     free(raiz);
                     return aux; //retornando o filho do nó removido o pai do nó removido (avô)
                 }
+                //remove nós com 2 filhos
+                else {
+                    No *aux = raiz->esq;
+                    //descobrindo o nó mais a direita da raiz->esq
+                    while (aux->dir != NULL)
+                        aux = aux->dir;
+                    raiz->conteudo = aux->conteudo;
+                    aux->conteudo = chave;  
+                    raiz->esq = remover(raiz->esq, chave);
+                    return raiz;
+
+                }
             }
-        }
-        else {
+        } else { // percorrendo a árvore
             if (chave < raiz->conteudo)
                 raiz->esq = remover(raiz->esq, chave);
             else
@@ -135,13 +146,13 @@ int main(void){
             printf("\nImpressão da árvore binária em ordem:\n");
             imprimirOrd(raiz);
             printf("\n");
-            printf("Tamanho: %d", tamanho(raiz));
+            printf("Tamanho: %d\n", tamanho(raiz));
             break;
         case 3:
             printf("\nImpressão da árvore binária em profundidade:\n");
             imprimirPre(raiz);
             printf("\n");
-            printf("Tamanho: %d", tamanho(raiz));
+            printf("Tamanho: %d\n", tamanho(raiz));
             break;
         case 4:
             printf("\nDigite um número a ser buscado: ");
@@ -150,16 +161,16 @@ int main(void){
             if (buscar(raiz, valor) == -1)
                 printf("\nValor não encontrado!\n\n");
             else 
-                printf("\n\nResultado da busca: %d", buscar(raiz, valor));
+                printf("\nResultado da busca: %d", buscar(raiz, valor));
             break;
         case 5:
             printf("Digite um número para remover: ");
             scanf("%d", &valor);
             raiz = remover(raiz, valor);
-            printf("\n\nRemovido com sucesso!\n");
+            printf("\nRemovido com sucesso!\n");
             break;
         default:
-            printf("\n\nOpção inválida!\n");
+            printf("\nOpção inválida!\n");
             break;
         }
     } while (opc != 0);
