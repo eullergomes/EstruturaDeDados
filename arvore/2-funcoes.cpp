@@ -114,13 +114,24 @@ No *remover (No *raiz, int chave){
     }
 }
 
+void imprimir(No *node, int tab = 0) {
+  if (node == NULL) return;
+
+  imprimir(node->dir, tab + 1);
+  for (int i = 0; i < tab; i++) {
+    printf("\t");
+  }
+  printf("%d\n", node->conteudo);
+  imprimir(node->esq, tab + 1);
+}
+
 void menu(){
-    printf("\nMENU:\n");
     printf("1 - Inserir nó\n");
     printf("2 - Imprimir árvore ordenada\n");
     printf("3 - Imprimir árvore em profundidade\n");
     printf("4 - Buscar nó\n");
     printf("5 - Remover nó\n");
+    printf("6 - imprimir representação da árvore\n");
     printf("0 - Sair\n\n");
     printf("Informe a opção: ");
 }
@@ -168,6 +179,9 @@ int main(void){
             scanf("%d", &valor);
             raiz = remover(raiz, valor);
             printf("\nRemovido com sucesso!\n");
+            break;
+        case 6:
+            imprimir(raiz);
             break;
         default:
             printf("\nOpção inválida!\n");
