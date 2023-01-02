@@ -12,32 +12,32 @@ typedef struct node {
 No *remover(No *node, int num);
 
 //3) inserir nó na árvore
-void inserir_no(No *node, No *novo) {
-    if (node == NULL) {
+void inserir_no(No *raiz, No *node) {
+    if (raiz == NULL) {
         printf("Erro\n");
         return;
     }
 
-    if (node->num == novo->num) {
+    if (raiz->num == node->num) {
         printf("O número já existe\n");
         return;
     }
 
-    //novo->num > node->num
-    if (node->num < novo->num) {
-        if (node->dir == NULL) { //só executa essa função se não tiver ninguem na direita
-            node->dir = novo;
+    //node->num > raiz->num
+    if (raiz->num < node->num) {
+        if (raiz->dir == NULL) { //só executa essa função se não tiver ninguem na direita
+            raiz->dir = node;
             return; // a função termina se não tiver ninguem a direita do nó raiz
         }
 
-        inserir_no(node->dir, novo); // percorrendo a direita da minha raiz
+        inserir_no(raiz->dir, node); // percorrendo a direita da minha raiz
     
-    } else { // se novo->num < node->num
-        if (node->esq == NULL) {
-            node->esq = novo;
+    } else { // se node->num < raiz->num
+        if (raiz->esq == NULL) {
+            raiz->esq = node;
             return;
         }
-    inserir_no(node->esq, novo); // percorrendo a esquerda da minha raiz
+    inserir_no(raiz->esq, node); // percorrendo a esquerda da minha raiz
     }
 }
 
