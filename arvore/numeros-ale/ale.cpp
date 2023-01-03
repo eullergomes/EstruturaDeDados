@@ -15,8 +15,8 @@ int main(void){
     srand(time(NULL)); //semente para os números serem aleatorios
 
     for (int i = 0; i < 100; i++){
-        //aleatorio = rand() % 100; // entre 0 e 100 - 1 (0, 99)
-        aleatorio = 10 + rand() % 91; // entre 10 e 100
+        aleatorio = rand() % 100; // entre 0 e 100 - 1 (0, 99)
+        // aleatorio = 10 + rand() % 91; // entre 10 e 100
         printf("%d ", aleatorio);
     }
 

@@ -17,6 +17,7 @@ typedef struct {
     No *raizArg;
 } ArvB;
 
+//inicializa as árvores
 ArvB *inicializarArvB(){
     ArvB *arv = (ArvB*) malloc(sizeof(ArvB));
     arv->raizBr = NULL;
@@ -25,6 +26,7 @@ ArvB *inicializarArvB(){
     return arv;
 }
 
+//cria o nó
 No *criar_no(){
     No *node = (No*) malloc(sizeof(No));
 
@@ -37,7 +39,7 @@ No *criar_no(){
     printf("Preço:\n");
     scanf("%f", &node->preco);
 
-    node->localizador = rand() % 10; //0-9
+    node->localizador = rand() % 5; //0-100000
     printf("Localizador: %d\n", node->localizador);
 
     node->esq = NULL;
@@ -46,32 +48,51 @@ No *criar_no(){
     return node;
 }
 
-void inserirNaRaiz(No *root, No *node){
-    if (root == NULL){
+// int verificarRadom (No *raiz, int localizador){
+//     if (raiz == NULL){
+//         return; //considerando que todos os números são maiores que 0
+//     }
+//     else {
+//         if (raiz->localizador == localizador)
+//             return raiz->localizador = rand() % 5;
+//         else {
+//             if (localizador < raiz->localizador)
+//                 return verificarRadom(raiz->esq, localizador);
+//             if (localizador > raiz->localizador)
+//                 return verificarRadom(raiz->dir, localizador);
+//         }
+//     }
+// }
+
+//insere o nó na raiz 
+void inserirNaRaiz(No *raiz, No *node){
+    if (raiz == NULL){
         printf("\nErro!\n");
         return;
     }
 
-    if (root->localizador == node->localizador){
+    if (raiz->localizador == node->localizador){
         printf("\nErro, localizador já existe\n");
         return;
     }    
 
-    if (root->localizador < node->localizador){
-        if (root->dir == NULL){
-            root->dir = node;
+    if (raiz->localizador < node->localizador){
+        if (raiz->dir == NULL){
+            raiz->dir = node;
             return;
         }
-        inserirNaRaiz(root->dir, node);
+        inserirNaRaiz(raiz->dir, node);
     } else {
-        if (root->esq == NULL){
-            root->esq = node;
+        if (raiz->esq == NULL){
+            raiz->esq = node;
             return;
         }
-        inserirNaRaiz(root->esq, node);
+        inserirNaRaiz(raiz->esq, node);
     }
 }
 
+
+//insere o nó na árvore
 void inserir_raiz(No **raiz){
     if (*raiz == NULL){
         *raiz = criar_no();
@@ -96,7 +117,7 @@ void imprimirPre(No *raiz){
     }
 }
 
-//Busca em ordem (ordenado) - não achei necessário mas funciona OK
+//Busca em ordem (ordenado) - não achei necessário inserir no cód. mas funciona OK
 void imprimirOrd(No *raiz){
     if (raiz != NULL){ //se não estiver vazia
         imprimirOrd(raiz->esq);
@@ -110,72 +131,41 @@ void imprimirOrd(No *raiz){
     }
 } 
 
-No *buscar_no(No *node, char destino[]) {
-    if (node == NULL){
-        return NULL;
+//buscar destino
+void buscarDestino(No *raiz, char destino[]){
+    if (raiz == NULL) return;
+    buscarDestino(raiz->dir, destino);
+    if (strcmp(raiz->destino, destino) == 0){
+        imprimirPre(raiz);
     }
-    if (strcmp(node->destino, destino) == 0){
-        return node;
-    }
-    if (strcmp(destino, node->destino) > 0){
-        return buscar_no(node->dir, destino);
-    }
-    if (strcmp(destino, node->destino) < 0){
-        return buscar_no(node->esq, destino);        
-    }  
+    buscarDestino(raiz->esq, destino);
 }
 
-void buscar(No *raiz) {
-    char destino[30];
-    printf("\nDigite o destino a ser buscado:\n");
-    scanf("%30[^\n]", &destino);
-    getchar();
-    No *res = buscar_no(raiz, destino);
-    if (res != NULL) {
-        imprimirPre(res);
-    } else {
-        printf("\nResultado não encontrado\n");
-    }
-}
-
-// int valorArrecadado(No *root){
-//     static float valor = 0;
-//     if (root == NULL){
-//         printf("\nÁrvore não encontrada\n");
-//         return 0;
-//     } else {
-//         return valor = valorArrecadado(root->esq->preco) + valorArrecadado(root->dir);
-//     }
-// }
-
+//quantidade de nós (passagens vendidas)
 int tamanho (No *raiz){
     if (raiz == NULL){
         return 0;
     } else {
-        return 0 + tamanho(raiz->esq) + tamanho(raiz->dir); 
+        return 1 + tamanho(raiz->esq) + tamanho(raiz->dir); 
     }
 }
 
-// int buscaAB(Node *raiz, int dado){
-// 	if (raiz->dado == dado)
-// 		return 1;
-// 	else {
-// 		if (dado > raiz->dado)
-// 			raiz = direita(raiz);
-// 		else
-// 			raiz = esquerda(raiz);8
-		
-// 		if (raiz == NULL) return 0;
-// 		buscaAB(raiz, dado);
-// 	}
-// }
+float valorArrecadado(No *raiz){
+    float cont = 0.0f;
+    if (raiz != NULL){
+        return cont = raiz->preco + valorArrecadado(raiz->esq) + valorArrecadado(raiz->dir);
+    }
+
+    return cont;
+}
+
 
 void menu() {
     printf("\nMENU\n");
     printf("1 - Comprar passagem\n");
-    printf("2 - Imprimir Árvore\n");
-    printf("3 - Buscar\n");
-    printf("4 - Tamanho da árvore\n");
+    printf("2 - Imprimir Árvores\n");
+    printf("3 - Buscar por destino\n");
+    printf("4 - Quantidade de voos e valor arrecadado\n");
     printf("0 - Sair\n\n");
     printf("Informe a opção: ");
 }
@@ -250,12 +240,14 @@ int main (void){
             printf("\nInforme a opção: ");
             scanf("%d", &opc2);
             getchar();
+            printf("\nInforme o destino:\n");
+            scanf("%30[^\n]", &destino);
             switch (opc2){
             case 1:
-                buscar(root->raizBr);
+                buscarDestino(root->raizBr, destino);
                 break;
             case 2:
-                buscar(root->raizArg);
+                buscarDestino(root->raizArg, destino);
                 break;
             default:
                 printf("\n\nOpção inválida!\n");
@@ -273,10 +265,12 @@ int main (void){
             case 1:
                 printf("\nPASSAGENS VENDIDAS - Brasil:\n");
                 printf("%d passagens\n", tamanho(root->raizBr));
+                printf("Valor arrecadado: %f\n", valorArrecadado(root->raizBr));
                 break;
             case 2:
                 printf("\nPASSAGENS VENDIDAS - Argentina:\n");
                 printf("%d passagens\n", tamanho(root->raizArg));
+                printf("Valor arrecadado: %f\n", valorArrecadado(root->raizArg));
                 break;
             default:
                 printf("\n\nOpção inválida!\n");
