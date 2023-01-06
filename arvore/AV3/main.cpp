@@ -15,6 +15,7 @@ typedef struct no{
 typedef struct {
     No *raizBr;
     No *raizArg;
+    No *raizVendas;
 } ArvB;
 
 //inicializa as árvores
@@ -22,8 +23,26 @@ ArvB *inicializarArvB(){
     ArvB *arv = (ArvB*) malloc(sizeof(ArvB));
     arv->raizBr = NULL;
     arv->raizArg = NULL;
+    arv->raizVendas = NULL;
     
     return arv;
+}
+
+ArvB *root = inicializarArvB();
+
+//Verifica se o localizador já existe em alguma das árvores
+No *buscar_no(No *node, int localizador){
+    if (node == NULL) return NULL;
+    if (node->localizador == localizador) return node;
+    if (localizador > node->localizador) return buscar_no(node->dir, localizador);
+    else return buscar_no(node->esq, localizador);
+}
+
+//Gera um número aleatório que ainda não foi usado como localizador
+int randomNum (){
+    int num = rand() % 1001; //0-1000
+    if (buscar_no(root->raizBr, num) == NULL && buscar_no(root->raizArg, num) == NULL) return num;
+    else randomNum();
 }
 
 //cria o nó
@@ -39,8 +58,10 @@ No *criar_no(){
     printf("Preço:\n");
     scanf("%f", &node->preco);
 
-    node->localizador = rand() % 5; //0-100000
+    node->localizador = randomNum();
     printf("Localizador: %d\n", node->localizador);
+
+    printf("\nCadastrado com sucesso!\n");
 
     node->esq = NULL;
     node->dir = NULL;
@@ -48,34 +69,12 @@ No *criar_no(){
     return node;
 }
 
-// int verificarRadom (No *raiz, int localizador){
-//     if (raiz == NULL){
-//         return; //considerando que todos os números são maiores que 0
-//     }
-//     else {
-//         if (raiz->localizador == localizador)
-//             return raiz->localizador = rand() % 5;
-//         else {
-//             if (localizador < raiz->localizador)
-//                 return verificarRadom(raiz->esq, localizador);
-//             if (localizador > raiz->localizador)
-//                 return verificarRadom(raiz->dir, localizador);
-//         }
-//     }
-// }
-
 //insere o nó na raiz 
 void inserirNaRaiz(No *raiz, No *node){
     if (raiz == NULL){
         printf("\nErro!\n");
         return;
-    }
-
-    if (raiz->localizador == node->localizador){
-        printf("\nErro, localizador já existe\n");
-        return;
     }    
-
     if (raiz->localizador < node->localizador){
         if (raiz->dir == NULL){
             raiz->dir = node;
@@ -91,14 +90,12 @@ void inserirNaRaiz(No *raiz, No *node){
     }
 }
 
-
 //insere o nó na árvore
 void inserir_raiz(No **raiz){
     if (*raiz == NULL){
         *raiz = criar_no();
         return;
     }
-
     No *novo = criar_no();
     inserirNaRaiz(*raiz, novo);
 }
@@ -106,12 +103,12 @@ void inserir_raiz(No **raiz){
 //Busca Pré-Ordem (profundidade)
 void imprimirPre(No *raiz){
     if (raiz != NULL){ //se não estiver vazia
-        printf("\n------------------------------------");
+        printf("\n---------------------------");
         printf("\nDestino: %s", raiz->destino);
         printf("\nData: %.2d/%.2d/%.4d", raiz->dia, raiz->mes, raiz->ano);
         printf("\nPreço: R$ %.2f", raiz->preco);
         printf("\nLocalizador: %d", raiz->localizador);
-        printf("\n------------------------------------\n");
+        printf("\n---------------------------\n");
         imprimirPre(raiz->esq);
         imprimirPre(raiz->dir);
     }
@@ -121,24 +118,37 @@ void imprimirPre(No *raiz){
 void imprimirOrd(No *raiz){
     if (raiz != NULL){ //se não estiver vazia
         imprimirOrd(raiz->esq);
-        printf("\n------------------------------------");
+        printf("\n---------------------------");
         printf("\nDestino: %s", raiz->destino);
         printf("\nData: %.2d/%.2d/%.4d", raiz->dia, raiz->mes, raiz->ano);
         printf("\nPreço: R$ %.2f", raiz->preco);
         printf("\nLocalizador: %d", raiz->localizador);
-        printf("\n------------------------------------\n");
+        printf("\n---------------------------\n");
         imprimirOrd(raiz->dir);
     }
 } 
 
+void imprimirDestino(No *raiz){
+    if (raiz != NULL){ //se não estiver vazia
+        printf("\n---------------------------");
+        printf("\nDestino: %s", raiz->destino);
+        printf("\nData: %.2d/%.2d/%.4d", raiz->dia, raiz->mes, raiz->ano);
+        printf("\nPreço: R$ %.2f", raiz->preco);
+        printf("\nLocalizador: %d", raiz->localizador);
+        printf("\n---------------------------\n");
+    }
+}
+
 //buscar destino
-void buscarDestino(No *raiz, char destino[]){
+void buscarDestino(No *raiz, char *destino){
     if (raiz == NULL) return;
-    buscarDestino(raiz->dir, destino);
+
     if (strcmp(raiz->destino, destino) == 0){
-        imprimirPre(raiz);
+        imprimirDestino(raiz);
     }
     buscarDestino(raiz->esq, destino);
+    buscarDestino(raiz->dir, destino);
+
 }
 
 //quantidade de nós (passagens vendidas)
@@ -155,26 +165,30 @@ float valorArrecadado(No *raiz){
     if (raiz != NULL){
         return cont = raiz->preco + valorArrecadado(raiz->esq) + valorArrecadado(raiz->dir);
     }
-
     return cont;
 }
 
-
 void menu() {
     printf("\nMENU\n");
-    printf("1 - Comprar passagem\n");
-    printf("2 - Imprimir Árvores\n");
+    printf("1 - Vender passagem\n");
+    printf("2 - Imprimir árvore\n");
     printf("3 - Buscar por destino\n");
-    printf("4 - Quantidade de voos e valor arrecadado\n");
+    printf("4 - Relatório\n");
     printf("0 - Sair\n\n");
     printf("Informe a opção: ");
+}
+
+void infoPais(){
+    printf("\nINFORME O PAÍS:\n");
+    printf("\n\t1 - Brasil");
+    printf("\n\t2 - Argentina\n");
+    printf("\nInforme a opção: ");
 }
 
 int main (void){
     srand(time(NULL));
 
-    ArvB *root = inicializarArvB();
-    int opc = 0, opc2 = 0;
+    int opc = 0, pais = 0;
     char destino[30];
 
     do{
@@ -186,46 +200,37 @@ int main (void){
             printf("\n\nSaindo...\n");
             break;
         case 1:
-            printf("\nINFORME SEU PAÍS:\n");
-            printf("\n\t1 - Brasil");
-            printf("\n\t2 - Argentina\n");
-
-            printf("\nInforme a opção:\n");
-            scanf("%d", &opc2);
+            printf("\nopção escolhida: VENDER PASSAGEM\n");
+            infoPais();
+            scanf("%d", &pais);
             getchar();
-            switch (opc2){
+            switch (pais){
             case 1:
                 inserir_raiz(&(root->raizBr));
-
-                printf("\nCadastrado com sucesso!\n");
                 break;
             case 2:
-
                 inserir_raiz(&(root->raizArg));
-
-                printf("\nCadastrado com sucesso!\n");
+                break;
+            case 0:
+                printf("\nSaindo...\n");
                 break;
             default:
                 printf("\n\nOpção inválida!\n");
                 break;
             }
-            
             break;
         case 2:
-            printf("\nQual árvore gostaria de imprimir:\n");
-            printf("\n\t1 - Brasil");
-            printf("\n\t2 - Argentina\n");
-
-            printf("\nInforme a opção:\n");
-            scanf("%d", &opc2);
+            printf("\nopção escolhida: IMPRIMIR ÁRVORE\n");
+            infoPais();
+            scanf("%d", &pais);
             getchar();
-            switch (opc2){
+            switch (pais){
             case 1:
-                printf("\n*********BRASIL*************\n");
+                printf("\n**********BRASIL***********\n");
                 imprimirPre(root->raizBr);
                 break;
             case 2:
-                printf("\n*********ARGENTINA*************\n");
+                printf("\n*********ARGENTINA*********\n");
                 imprimirPre(root->raizArg);
                 break;
             default:
@@ -234,54 +239,45 @@ int main (void){
             }
             break;
         case 3:
-            printf("\nEm qual árvore gostaria de buscar:\n");
-            printf("\n\t1 - Brasil");
-            printf("\n\t2 - Argentina\n");
-            printf("\nInforme a opção: ");
-            scanf("%d", &opc2);
-            getchar();
+            printf("\nopção escolhida: BUSCAR POR DESTINO\n");
             printf("\nInforme o destino:\n");
             scanf("%30[^\n]", &destino);
-            switch (opc2){
-            case 1:
-                buscarDestino(root->raizBr, destino);
-                break;
-            case 2:
-                buscarDestino(root->raizArg, destino);
-                break;
-            default:
-                printf("\n\nOpção inválida!\n");
-                break;
-            }
+            
+            printf("\n---------------------------\n");
+            printf("|    Resultado da busca   |");
+            printf("\n---------------------------\n");
+            printf("\n**********BRASIL***********\n");
+            buscarDestino(root->raizBr, destino);
+            printf("\n*********ARGENTINA*********\n");
+            buscarDestino(root->raizArg, destino);
             break;
         case 4:
-            printf("\nEm qual árvore gostaria de verificar:\n");
-            printf("\n\t1 - Brasil");
-            printf("\n\t2 - Argentina\n");
-            printf("\nInforme a opção: ");
-            scanf("%d", &opc2);
+            printf("\nopção escolhida: RELATÓRIO\n");
+            infoPais();
+            scanf("%d", &pais);
             getchar();
-            switch (opc2){
+
+            printf("\n---------------------------\n");
+            printf("|        Relatório        |");
+            printf("\n---------------------------\n");
+
+            switch (pais){
             case 1:
-                printf("\nPASSAGENS VENDIDAS - Brasil:\n");
-                printf("%d passagens\n", tamanho(root->raizBr));
-                printf("Valor arrecadado: %f\n", valorArrecadado(root->raizBr));
+                printf("\nBRASIL:\n");
+                printf("Passagens vendidas: %d\n", tamanho(root->raizBr));
+                printf("Valor arrecadado: R$ %.2f\n", valorArrecadado(root->raizBr));
                 break;
             case 2:
-                printf("\nPASSAGENS VENDIDAS - Argentina:\n");
-                printf("%d passagens\n", tamanho(root->raizArg));
-                printf("Valor arrecadado: %f\n", valorArrecadado(root->raizArg));
+                printf("\nARGENTINA:\n");
+                printf("Passagens vendidas: %d\n", tamanho(root->raizArg));
+                printf("Valor arrecadado: R$ %.2f\n", valorArrecadado(root->raizArg));
                 break;
             default:
                 printf("\n\nOpção inválida!\n");
                 break;
             }
             break;
-        
-        default:
-            printf("\nOpção inválida!\n");
-            break;
         }
+        printf("\n");
     } while (opc != 0);
-
 }
