@@ -4,7 +4,6 @@
 #include <string.h>
 
 //Estoque de almoxarifado
-
 typedef struct no{
     int id;
     char nome[30];
@@ -91,16 +90,23 @@ No *retirar (No *head){
         printf("\nDigite a quantidade a ser retirada: ");
         scanf("%d", &num);
 
-        head->quantidade -= num;
-        printf("\nRetirado com sucesso!\n\n");
-        return head;
+        if (num < head->quantidade){
+            head->quantidade -= num;
+            printf("\nRetirado com sucesso!\n\n");
+            return head;
+        }
+        else{
+            printf("\nA quantidade que você quer rertirar é menor do que a do estoque\n");
+            return head;
+        }
+
+        
     case 2:
         printf("\nDigite a quantidade a ser incrementada: ");
         scanf("%d", &num);
-
-        head->quantidade += num;
-        printf("\nIncrementado com sucesso!\n\n");
-        return head;
+            head->quantidade += num;
+            printf("\nIncrementado com sucesso!\n\n");
+            return head;
     default:
         printf("\nOpção inválida!\n\n");
         break;

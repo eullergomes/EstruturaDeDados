@@ -1,8 +1,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
  
-typedef struct NO 
-{ 
+typedef struct NO { 
 	int info; 
 	struct NO *esquerda, *direita; 
 } node, *arvore; 

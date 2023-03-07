@@ -69,7 +69,7 @@ int buscar (No *raiz, int chave){
     }
 }
 
-//retorna um ponteiro para o nó
+//Remover nó da arvore (todos os casos)
 No *remover (No *raiz, int chave){
     if (raiz == NULL){
         printf("\n\nValor não encontrado!\n");

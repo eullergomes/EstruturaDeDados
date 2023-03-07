@@ -50,7 +50,7 @@ No *criar_no(){
     No *node = (No*) malloc(sizeof(No));
 
     printf("\nDestino:\n");
-    scanf("%30[^\n]s", &node->destino);
+    scanf("%30[^\n]s", node->destino);
 
     printf("Data (dia/mês/ano):\n");
     scanf("%d\n%d\n%d", &node->dia, &node->mes, &node->ano);
@@ -143,15 +143,16 @@ void imprimirDestino(No *raiz){
 void buscarDestino(No *raiz, char *destino){
     if (raiz == NULL) return;
 
-    if (strcmp(raiz->destino, destino) == 0){
-        imprimirDestino(raiz);
-    }
+    
     buscarDestino(raiz->esq, destino);
     buscarDestino(raiz->dir, destino);
 
+    if (strcmp(raiz->destino, destino) == 0){
+        imprimirDestino(raiz);
+    }
 }
 
-//quantidade de nós (passagens vendidas)
+//quantidade de nós (passagens vendidas)gdddffgtthjhythszz\zzzzxc
 int tamanho (No *raiz){
     if (raiz == NULL){
         return 0;
@@ -241,7 +242,7 @@ int main (void){
         case 3:
             printf("\nopção escolhida: BUSCAR POR DESTINO\n");
             printf("\nInforme o destino:\n");
-            scanf("%30[^\n]", &destino);
+            scanf("%30[^\n]", destino);
             
             printf("\n---------------------------\n");
             printf("|    Resultado da busca   |");
