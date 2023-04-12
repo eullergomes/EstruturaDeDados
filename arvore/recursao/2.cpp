@@ -21,3 +21,8 @@ int main(void){
 
     return 0;
 }
+
+
+//Escreva uma função recursiva que calcule a soma dos primeiros N números inteiros positivos.
+
+//Escreva uma função recursiva que determine se um número inteiro é primo.

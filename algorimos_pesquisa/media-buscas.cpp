@@ -3,9 +3,8 @@
 #include <time.h>
 
 /*
-Implemente um programa que gere e preencha
-randomicamente um array com 15, 127 e 32.767
-registros e teste o número médio de comparações
+Implemente um programa que gere e preencha randomicamente um array com 15, 127 e 32.767 registros e 
+teste o número médio de comparações
 */
 
 //preenche com valores ordenados

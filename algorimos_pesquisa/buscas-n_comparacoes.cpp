@@ -3,10 +3,8 @@
 #include <time.h>
 
 /*
-Calcule o número médio de comparações necessário
-para localizar uma chave em um array com 15, 127 e
-32.767 registros, utilizando tanto pesquisa sequencial
-quanto pesquisa binária
+Calcule o número médio de comparações necessário para localizar uma chave em um array com 15, 127 e
+32.767 registros, utilizando tanto pesquisa sequencial quanto pesquisa binária
 */
 
 //preenche com valores ordenados
