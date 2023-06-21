@@ -17,9 +17,10 @@ encadeada simples.
     C) Uma opção deve estar disponível para buscar todos os ingressos já emitidos para
 um determinado cpf. Neste caso, o sistema deve ordenar a lista utilizando o método
 Insertion Sort.
-    D)
-     Antes de realizar a inserção de um novo ingresso, o sistema deve conferir se existe
+    
+    D)Antes de realizar a inserção de um novo ingresso, o sistema deve conferir se existe
 algum registro de cpf e data já cadastrado e notificar o usuário.
+    
     E) Ao fim do processo de vendas, uma opção deve ordenar a lista pela data do evento
 utilizando o método Quick Sort e informando quantos ingressos foram cadastrados
 em cada data.
@@ -287,6 +288,7 @@ Ticket *pos(Ticket *head, int p) {
   return NULL;
 }
 
+//lembrar: corrigir bugs
 void contarIngressos (list *lst) {
     if (lst->inicio == NULL){
       printf("\nLista vazia!\n\n");
