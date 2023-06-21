@@ -20,7 +20,7 @@ int fibonacci(int n){ //6
 }
 
 int main (void){
-    int n = 0;
+    int n = 3;
 
     printf("Digite um número: ");
     scanf("%d", &n);

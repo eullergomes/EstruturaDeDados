@@ -296,7 +296,6 @@ void contarIngressos (list *lst) {
     int size = length(lst->inicio);
     int cont = 0;
     int qtd = 1;
-    int repetido = 0;
     Ticket *cel_atual = lst->inicio;
     while (cont < size) {
         Ticket *min_node = cel_atual; 

@@ -66,11 +66,29 @@ void inserir(ArvB *arv, int valor){
     }
 }
 
+//Pré-ordem
+void imprimir1(No *raiz){
+    if(raiz != NULL){ //se não estiver vazia
+        printf("%d ", raiz->conteudo);
+        imprimir1(raiz->esq);
+        imprimir1(raiz->dir);
+    }
+}
+//Em ordem
+void imprimir2(No *raiz){
+    if(raiz != NULL){ //se não estiver vazia
+        imprimir2(raiz->esq);
+        printf("%d ", raiz->conteudo);
+        imprimir2(raiz->dir);
+    }
+}
+
+//Pós-ordem
 void imprimir(No *raiz){
     if(raiz != NULL){ //se não estiver vazia
         imprimir(raiz->esq);
-        printf("%d ", raiz->conteudo);
         imprimir(raiz->dir);
+        printf("%d ", raiz->conteudo);
     }
 }
 
