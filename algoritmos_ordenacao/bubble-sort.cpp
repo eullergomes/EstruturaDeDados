@@ -35,7 +35,7 @@ int main(void){
     preencher(vetor, 10000);
 
     //imprimir
-    // imprimir(vetor, 10000);
+    imprimir(vetor, 10000);
 
     // printf("\n\n");
 
@@ -45,13 +45,17 @@ int main(void){
     bubbleSort(vetor, 10000);
 
     int depois = clock();
-    printf("\n");
+    printf("\n\n\n");
+
+    imprimir(vetor, 10000);
+
+    printf("\n\n\n");
 
     float tempo = ((float) (depois - antes)) / CLOCKS_PER_SEC; //1000
     printf("Tempo de execucao: %lf segundos", tempo);
     printf("\n\n");
     //imprimir
-    // imprimir(vetor, 10000);
+    
 
     return 0;
 }
